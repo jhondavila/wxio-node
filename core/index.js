@@ -1,4 +1,4 @@
-import Core from "../../common/core";
+import Core from "../common/core";
 
 import path from "path";
 import GlobalUtil from "./GlobalUitl";
