@@ -1,13 +1,9 @@
 // import http from 'http';
 import Base from '../Base';
-
-// import socketio from 'socket.io';
 import baseServer from '../http/Base';
 import io from "socket.io";
-// import SController from './Controller';
 import Core from '../core';
-// const socketIO = socketio;
-
+import { getRedisAdapter } from "./Redis"
 
 // console.log(io)
 class SSIO extends Base {
@@ -41,6 +37,13 @@ class SSIO extends Base {
         this.io = io(this.server.srv, {
             wsEngine: this.wsEngine
         });
+
+        let requiredRedis = process.env.isWorker == "true" && process.env.totalWorkersInit > 1 ?  true : false;
+
+        if(requiredRedis){
+            let redisAdapter = getRedisAdapter();
+            this.io.adapter(redisAdapter)
+        }
     }
     setServer(server) {
         this.initServer(server);
