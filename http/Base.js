@@ -96,12 +96,18 @@ class httpBase extends Base {
         Core.Object.each(this.defaultHeaders, function (key, value) {
             res.setHeader(key, value);
         });
-        // try {
-            //res.set("Content-Security-Policy", "default-src 'self'");    
-        // } catch (error) {
-            
-        // }
-        
+        if (this.logWorkers) {
+            let me = this;
+            res.sendSafe = res.send;
+            res.send = function (params) {
+                Object.assign(params, {
+                    worker: me.port
+                })
+                res.sendSafe(params)
+            };
+        }
+
+
         res.setHeader('X-Powered-By', 'Wx');
     }
     run(hostname) {
