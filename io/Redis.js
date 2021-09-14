@@ -1,9 +1,10 @@
 
 
-import { createAdapter } from 'socket.io-redis';
+import socketIORedis from 'socket.io-redis';
 import { RedisClient } from 'redis';
 
 
+// console.log(redisAdapters)
 let redisAdapter;
 let pubClient;
 let subClient;
@@ -30,7 +31,7 @@ const getRedisAdapter = () => {
         });
 
 
-        redisAdapter = createAdapter({ pubClient, subClient })
+        redisAdapter = socketIORedis({ pubClient, subClient })
     }
 
 
