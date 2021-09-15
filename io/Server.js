@@ -4,6 +4,7 @@ import baseServer from '../http/Base';
 import io from "socket.io";
 import Core from '../core';
 import { getRedisAdapter } from "./Redis"
+import ws from 'ws';
 
 // console.log(io)
 class SSIO extends Base {
@@ -35,12 +36,22 @@ class SSIO extends Base {
         }
         this.server.ssio = this;
         this.io = io(this.server.srv, {
-            wsEngine: this.wsEngine
+            allowUpgrades: true,
+            path: "/ssio/",
+            allowRequest: (req, callback) => {
+                callback(null, true);
+            },
+            cors: {
+                origin: ["http://localhost", "http://localhost:3000"],
+                methods: ["GET", "POST"],
+                credentials: true
+            },
+            transports: ["websocket", "polling"],
         });
 
-        let requiredRedis = process.env.isWorker == "true" && process.env.totalWorkersInit > 1 ?  true : false;
+        let requiredRedis = process.env.isWorker == "true" && process.env.totalWorkersInit > 1 ? true : false;
 
-        if(requiredRedis){
+        if (requiredRedis) {
             let redisAdapter = getRedisAdapter();
             this.io.adapter(redisAdapter)
         }
