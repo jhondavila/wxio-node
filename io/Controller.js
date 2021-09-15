@@ -33,7 +33,7 @@ class SController extends Base {
     initGlobalMiddleware() {
         for (let x = 0; x < this.server.globalMiddleware.length; x++) {
             let fn = this.server.globalMiddleware[x];
-            this.space.use(fn);
+            this.space.use(this._asyncMiddleware(fn, this));
         }
     }
     initializeSpace(namespace, events) {
@@ -143,13 +143,12 @@ class SController extends Base {
 
     _asyncMiddleware(fn, scope) {
         return function (socket, next) {
-            return Promise
-                .resolve(
-                    fn.call(scope, socket, next)
-                ).catch(function (err) {
-                    console.log(err);
-                    next(new Error("error in code"))
-                });
+            Promise.resolve(fn(socket, next)).catch(err => {
+                console.log(err)
+                const error = new Error("SERVER_INTERNAL_ERROR");
+                error.data = { content: "Error in code , review console in server" }; // additional details
+                next(error);
+            })
         }
     }
 }
