@@ -5,7 +5,7 @@ import io from "socket.io";
 import Core from '../core';
 import { getRedisAdapter } from "./Redis"
 import ws from 'ws';
-
+import { v4 as uuidv4 } from "uuid"
 // console.log(io)
 class SSIO extends Base {
 
@@ -35,6 +35,8 @@ class SSIO extends Base {
             });
         }
         this.server.ssio = this;
+
+
         this.io = io(this.server.srv, {
             allowUpgrades: true,
             path: "/ssio/",
