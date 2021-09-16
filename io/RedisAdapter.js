@@ -204,6 +204,7 @@ class RedisAdapter extends socket_io_adapter_1.Adapter {
                     rooms: new Set(request.opts.rooms),
                     except: new Set(request.opts.except),
                 };
+                debugger
                 const localSockets = await super.fetchSockets(opts);
 
                 let data = {

@@ -1,6 +1,6 @@
 // const { createAdapter } = require("@socket.io/redis-adapter");
 
-import { createAdapter, RedisAdapter } from '@socket.io/redis-adapter';
+import { createAdapter } from '@socket.io/redis-adapter';
 import { RedisClient } from 'redis';
 
 
