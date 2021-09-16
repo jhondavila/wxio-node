@@ -1,6 +1,6 @@
+// const { createAdapter } = require("@socket.io/redis-adapter");
 
-
-import socketIORedis from 'socket.io-redis';
+import { createAdapter, RedisAdapter } from '@socket.io/redis-adapter';
 import { RedisClient } from 'redis';
 
 
@@ -9,11 +9,15 @@ let redisAdapter;
 let pubClient;
 let subClient;
 
+
+// console.log(RedisAdapter)
+
 const getRedisAdapter = () => {
     if (!redisAdapter) {
 
         pubClient = new RedisClient({ host: 'localhost', port: 6379 })
         subClient = pubClient.duplicate();
+
 
 
         // console.log(redisAdapter)
@@ -31,7 +35,8 @@ const getRedisAdapter = () => {
         });
 
 
-        redisAdapter = socketIORedis({ pubClient, subClient })
+
+        redisAdapter = createAdapter(pubClient, subClient);
     }
 
 
