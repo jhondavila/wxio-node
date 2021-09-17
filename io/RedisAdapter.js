@@ -204,17 +204,22 @@ class RedisAdapter extends socket_io_adapter_1.Adapter {
                     rooms: new Set(request.opts.rooms),
                     except: new Set(request.opts.except),
                 };
-                debugger
                 const localSockets = await super.fetchSockets(opts);
 
                 let data = {
                     requestId: request.requestId,
-                    sockets: localSockets.map((socket) => ({
-                        id: socket.id,
-                        handshake: socket.handshake,
-                        rooms: [...socket.rooms],
-                        data: socket.data,
-                    })),
+                    sockets: localSockets.map((socket) => {
+                        let res =  {
+                            id: socket.id,
+                            handshake: socket.handshake,
+                            rooms: [...socket.rooms],
+                            data: socket.data,
+                            access : socket.access,
+                            
+                        }
+                        delete res.handshake.sessionStore;
+                        return res;
+                    }),
                 };
                 console.log(data)
                 response = JSON.stringify(data);
