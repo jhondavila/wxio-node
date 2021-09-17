@@ -12,7 +12,7 @@ let subClient;
 
 // console.log(RedisAdapter)
 
-const getRedisAdapter = () => {
+const getRedisAdapter = (opts) => {
     if (!redisAdapter) {
 
         pubClient = new RedisClient({ host: 'localhost', port: 6379 })
@@ -36,7 +36,7 @@ const getRedisAdapter = () => {
 
 
 
-        redisAdapter = createAdapter(pubClient, subClient);
+        redisAdapter = createAdapter(pubClient, subClient, opts);
     }
 
 

@@ -164,6 +164,35 @@ export default {
       path = this.urlJoin.apply(this, [path].concat(appends.slice(1, appends.length)));
     }
     return path;
+  },
+
+  IOUtils: {
+    socket: {
+      setData(socket, data) {
+        Object.assign(socket.data, data);
+      },
+      getData(socket) {
+        return socket.data || {};
+      },
+      clearData(socket) {
+        socket.data = {};
+        return socket.data;
+      }
+    },
+    space: {
+      emit(space, list, event, data) {
+        let target = space.to(list);
+        target.emit(event, data);
+      },
+      async getAllSockets(space, roomId) {
+        let list = await space.in(roomId).allSockets();
+
+        return [...list.values()]
+      },
+      async fetchSockets(space, roomId) {
+        return await space.in(roomId).fetchSockets();
+      },
+    }
   }
   // util: util
 };

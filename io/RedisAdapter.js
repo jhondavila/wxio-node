@@ -50,6 +50,7 @@ class RedisAdapter extends socket_io_adapter_1.Adapter {
         this.pubClient = pubClient;
         this.subClient = subClient;
         this.requests = new Map();
+        this.customFetch = opts.customFetch;
         this.uid = uid2(6);
         this.requestsTimeout = opts.requestsTimeout || 5000;
         const prefix = opts.key || "socket.io";
@@ -205,24 +206,15 @@ class RedisAdapter extends socket_io_adapter_1.Adapter {
                     except: new Set(request.opts.except),
                 };
                 const localSockets = await super.fetchSockets(opts);
-
-                let data = {
+                response = JSON.stringify({
                     requestId: request.requestId,
-                    sockets: localSockets.map((socket) => {
-                        let res =  {
-                            id: socket.id,
-                            handshake: socket.handshake,
-                            rooms: [...socket.rooms],
-                            data: socket.data,
-                            access : socket.access,
-                            
-                        }
-                        delete res.handshake.sessionStore;
-                        return res;
-                    }),
-                };
-                console.log(data)
-                response = JSON.stringify(data);
+                    sockets: localSockets.map(this.customFetch ? this.customFetch : (socket) => ({
+                        id: socket.id,
+                        handshake: socket.handshake,
+                        rooms: [...socket.rooms],
+                        data: socket.data,
+                    })),
+                });
                 this.pubClient.publish(this.responseChannel, response);
                 break;
             case RequestType.SERVER_SIDE_EMIT:

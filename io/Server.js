@@ -15,6 +15,7 @@ class SSIO extends Base {
     // typeMode: string;
     // stringMessage: string;
     // wsEngine: string = "ws";
+    redis = {};
     constructor(config) {
         super(config)
         this.port = 3001;
@@ -54,7 +55,7 @@ class SSIO extends Base {
         let requiredRedis = process.env.isWorker == "true" && process.env.totalWorkersInit > 1 ? true : false;
 
         if (requiredRedis) {
-            let redisAdapter = getRedisAdapter();
+            let redisAdapter = getRedisAdapter(this.redis);
             this.io.adapter(redisAdapter)
         }
     }
