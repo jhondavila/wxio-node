@@ -12,12 +12,15 @@ class httpBase extends Base {
         super(config)
 
         this.port = 3000;
+        this.reflectHttpPort = 2999;
+
         this.defaultHeaders = {};
         this.historyApiFallback;
         this.corsByOrigin = false;
         this.autoSS = false;
         this.SS;
 
+        this.reflectHttp = false;
         Core.apply(this, config);
 
         this.app = express();
@@ -27,10 +30,7 @@ class httpBase extends Base {
         this.layerMgr = new LayerManager({
             app: this.app
         });
-
-        // console.log(this)
-
-
+        global.server = this;
     }
 
     get srv() {
@@ -39,6 +39,9 @@ class httpBase extends Base {
         } else {
             if (this.tls) {
                 this._srv = https.createServer(this.tls, this.app);
+                if (this.reflectHttp) {
+                    this._reflectSrv = new http.Server(this.app);
+                }
             } else {
                 this._srv = new http.Server(this.app);
             }
@@ -114,12 +117,11 @@ class httpBase extends Base {
         // this.fireEvent("beforelisten", this, this.srv, this.port);
         this.srv.on("error", this.errorSrv.bind(this));
         if (hostname) {
-
             this.srv.listen(this.port, hostname, this.listenServer.bind(this));
+            this._reflectSrv.listen(this.reflectHttpPort,hostname,this.listenServer.bind(this));
         } else {
-
             this.srv.listen(this.port, this.listenServer.bind(this));
-
+            this._reflectSrv.listen(this.reflectHttpPort,this.listenServer.bind(this));
         }
     }
     errorSrv(e) {
