@@ -138,7 +138,10 @@ class Controller extends Base {
                 .resolve(
                     fn.call(scope, req, res, next)
                 ).catch(function (err) {
+                    console.group()
+                    console.log(req.tenantName)
                     console.log(err);
+                    console.groupEnd()
                     res.status(500).send({
                         success: false,
                         error: {
