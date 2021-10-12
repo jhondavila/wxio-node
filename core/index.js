@@ -17,6 +17,7 @@ Core.apply(
 //   ...Core.String,
 //   lString
 // }
+import fs from "fs"
 
 import Script from '../http/Script';
 // import os from 'os';
@@ -164,6 +165,30 @@ export default {
       path = this.urlJoin.apply(this, [path].concat(appends.slice(1, appends.length)));
     }
     return path;
+  },
+  pipeFileResponse(pathfile, response) {
+
+    return new Promise((resolve, reject) => {
+
+      const writer = fs.createWriteStream(pathfile);
+
+      response.data.pipe(writer);
+      let error = null;
+      writer.on('error', err => {
+        error = err;
+        writer.close();
+        reject(err);
+      });
+      writer.on('close', () => {
+        if (!error) {
+          console.log("complete");          
+          resolve();
+        } else {
+          reject(error);
+        }
+      });
+    })
+
   },
 
   IOUtils: {
