@@ -181,7 +181,7 @@ export default {
       });
       writer.on('close', () => {
         if (!error) {
-          console.log("complete");          
+          console.log("complete");
           resolve();
         } else {
           reject(error);
@@ -189,6 +189,55 @@ export default {
       });
     })
 
+  },
+
+  emailUtils: {
+
+
+    getEmailsStr() {
+      let params = Array.prototype.slice.call(arguments, 0, arguments.length);
+
+      let list = [];
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      params.forEach(i => {
+        if (typeof i == "string") {
+          let parts = i.split(";");
+          if (parts.length > 1) {
+            let str = this.getEmailsStr(...parts);
+            list.push(...str.split(";"));
+          } else if (re.test(String(i).toLowerCase())) {
+            list.push(i)
+          }
+        } else if (Array.isArray(i)) {
+          let str = this.getEmailsStr(...i);
+          list.push(...str.split(";"));
+        } else if (typeof i == "object" && (i.username || i.email)) {
+          if (re.test(String(i.email).toLowerCase())) {
+            list.push(i.email)
+          } else if (re.test(String(i.username).toLowerCase())) {
+            list.push(i.username)
+          }
+        }
+      });
+      return list.join(";");
+    }
+  },
+  validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  },
+
+  checkEmailsToArray() {
+    let params = Array.prototype.slice.call(arguments, 0, arguments.length);
+    let emails = [];
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    params.forEach(i => {
+      if (re.test(String(i).toLowerCase())) {
+        emails.push(i);
+      }
+    });
+    return emails;
   },
 
   IOUtils: {
