@@ -98,6 +98,15 @@ class Controller extends Base {
             handlers.push(fnHandler)
         } else if (Core.isObject(handler)) {
 
+
+            if (handler.middleware) {
+
+                for (let x = 0; x < handler.middleware.length; x++) {
+                    handlers.push(this.asyncMiddleware(handler.middleware[x], this));
+                }
+            }
+
+
             if (handler.form) {
                 let fnFormSupported = this.asyncMiddleware(this.getFormSupported(handler), this)
                 handlers.push(fnFormSupported);
