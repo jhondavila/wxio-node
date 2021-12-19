@@ -47,9 +47,7 @@ class httpServer extends httpBase {
     defaultInitMiddleware() {
 
         if (this.historyApiFallback && this.historyApiFallback) {
-            this.app.use(history({
-                ...this.historyApiFallback
-            }));
+            this.app.use(history(this.historyApiFallbacks));
         }
 
         this.addMiddleware(bodyParser.json(this.jsonConfig), {
