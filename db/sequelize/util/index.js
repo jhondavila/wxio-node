@@ -332,6 +332,26 @@ export default {
                 [Op.like]: value
                 // [Op.in]: value
             };
+        } else if (item.type == "or_where"){
+            if(!whereObj[Op.or]) {
+                whereObj[Op.or] = [];
+            }
+            let value = item.value;
+            whereObj[Op.or].push({
+                [key] : {
+                    [Op.eq] : value
+                }
+            });
+        } else if (item.type == "or_where_in"){
+             if(!whereObj[Op.or]) {
+                whereObj[Op.or] = [];
+            }
+            let value = item.value;
+            whereObj[Op.or].push({
+                [key] : {
+                    [Op.in] : value
+                }
+            });
         } else {
 
             let value = item.value;
