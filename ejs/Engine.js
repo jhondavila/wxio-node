@@ -126,8 +126,8 @@ function fromStringRenderer(name) {
 }
 
 function read(path, options, cb) {
-  var str = readCache[path];
-  var cached = options.cache && str && typeof str === 'string';
+  var str = readCache[path+"#"+options.cacheId];
+  var cached = options.cacheId && str && typeof str === 'string';
 
   // cached (only if cached is a string and not a compiled template function)
   if (cached) return cb(null, str);
@@ -137,7 +137,7 @@ function read(path, options, cb) {
     if (err) return cb(err);
     // remove extraneous utf8 BOM marker
     str = str.replace(/^\uFEFF/, '');
-    if (options.cache) readCache[path] = str;
+    if (options.cacheId) readCache[path+"#"+options.cacheId] = str;
     cb(null, str);
   });
 }
@@ -151,7 +151,6 @@ exports.ejs = fromStringRenderer('ejs');
  */
 
 exports.ejs.render = function(str, options, cb) {
-  // debugger
   return promisify(cb, function(cb) {
     var engine = requires.ejs || (requires.ejs = require('ejs'));
     try {

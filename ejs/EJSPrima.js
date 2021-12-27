@@ -1,6 +1,5 @@
 var esprima = require('esprima')
 // Begin 'ejsprima'
-console.log(esprima)
 
 const ejsprima = {};
 
