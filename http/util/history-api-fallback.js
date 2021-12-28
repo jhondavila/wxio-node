@@ -42,7 +42,7 @@ function historyApiFallback(options) {
             return next();
         }
 
-        // debugger
+        debugger
 
         var parsedUrl = url.parse(req.url);
         options.excludes = options.excludes || [];
