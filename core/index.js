@@ -220,7 +220,8 @@ export default {
           }
         }
       });
-      return list.join(";");
+      let unique = [...new Set(list)];
+      return unique.join(";");
     }
   },
   validateEmail(email) {
