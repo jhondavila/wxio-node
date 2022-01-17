@@ -76,7 +76,14 @@ class ExpressSession extends EventEmitter {
             // this.ctStore = new StoreSequelize(this.store);
             this.store = new SequelizeStore({
                 db: this.store.db,
-                table: this.store.modelName
+                table: this.store.modelName,
+                extendDefaultFields : (defaults, session) =>{
+                    return {
+                        data: defaults.data,
+                        expires: defaults.expires,
+                        id_user: session.id_user,
+                    };
+                }
             });
         }
 
