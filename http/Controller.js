@@ -148,6 +148,7 @@ class Controller extends Base {
                     fn.call(scope, req, res, next)
                 ).catch(function (err) {
                     console.group()
+                    console.trace();
                     console.log(req.tenantName)
                     console.log(err);
                     console.groupEnd()
