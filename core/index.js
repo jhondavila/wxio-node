@@ -212,7 +212,7 @@ export default {
         } else if (Array.isArray(i)) {
           let str = this.getEmailsStr(...i);
           list.push(...str.split(";"));
-        } else if (typeof i == "object" && (i.username || i.email)) {
+        } else if (i && typeof i == "object" && (i.username || i.email)) {
           if (re.test(String(i.email).toLowerCase())) {
             list.push(i.email)
           } else if (re.test(String(i.username).toLowerCase())) {

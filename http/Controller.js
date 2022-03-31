@@ -87,9 +87,10 @@ class Controller extends Base {
         }
 
 
-
-        for (let x = 0; x < this.middleware.length; x++) {
-            handlers.push(this.asyncMiddleware(this.middleware[x], this));
+        if (!handler.preventClassMiddleware) {
+            for (let x = 0; x < this.middleware.length; x++) {
+                handlers.push(this.asyncMiddleware(this.middleware[x], this));
+            }
         }
 
 
